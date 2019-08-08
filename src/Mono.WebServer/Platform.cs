@@ -103,7 +103,11 @@ namespace Mono.WebServer {
 
 		public static void LogIdentity ()
 		{
-			Logger.Write (LogLevel.Debug, "Uid {0}, euid {1}, gid {2}, egid {3}", Syscall.getuid (), Syscall.geteuid (), Syscall.getgid (), Syscall.getegid ());
+                        if (IsUnix) {
+				Logger.Write (LogLevel.Debug, "Uid {0}, euid {1}, gid {2}, egid {3}", Syscall.getuid (), Syscall.geteuid (), Syscall.getgid (), Syscall.getegid ());
+                        } else {
+				Logger.Write (LogLevel.Debug, "Uid {0}, euid {1}, gid {2}, egid {3}", -1, -1, -1, -1);
+                        }
 		}
 
 		public static void SetIdentity (uint uid, uint gid)
