@@ -44,8 +44,10 @@ namespace Mono.WebServer
 
 		public void Dispose ()
 		{
-			Syscall.seteuid (euid);
-			Syscall.setegid (egid);
+			if (Platform.IsUnix) {
+				Syscall.seteuid (euid);
+				Syscall.setegid (egid);
+			}
 		}
 	}
 }

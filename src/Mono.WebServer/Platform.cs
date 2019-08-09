@@ -75,39 +75,49 @@ namespace Mono.WebServer {
 
 		static uint GetUid (string user)
 		{
-			var info = new UnixUserInfo (user);
-			long uid = info.UserId;
-			if (uid > UInt32.MaxValue || uid <= 0)
-				throw new ArgumentOutOfRangeException ("user", String.Format ("Uid for {0} ({1}) not in range for suid", user, uid));
-			return (uint)uid;
+                        if (IsUnix) {
+				var info = new UnixUserInfo (user);
+				long uid = info.UserId;
+				if (uid > UInt32.MaxValue || uid <= 0)
+					throw new ArgumentOutOfRangeException ("user", String.Format ("Uid for {0} ({1}) not in range for suid", user, uid));
+				return (uint)uid;
+			} else {
+				return 0;
+			}
 		}
 
 		static uint GetGid (string group)
 		{
-			var info = new UnixGroupInfo (group);
-			var gid = info.GroupId;
-			if (gid > UInt32.MaxValue || gid <= 0)
-				throw new ArgumentOutOfRangeException ("group", String.Format ("Gid for {0} ({1}) not in range for sgid", group, gid));
-			return (uint)gid;
+			if (IsUnix) {
+				var info = new UnixGroupInfo (group);
+				var gid = info.GroupId;
+				if (gid > UInt32.MaxValue || gid <= 0)
+					throw new ArgumentOutOfRangeException ("group", String.Format ("Gid for {0} ({1}) not in range for sgid", group, gid));
+				return (uint)gid;
+			} else {
+				return 0;
+			}
 		}
 
 		static void SetUser (string user)
 		{
-			Syscall.setuid (GetUid (user));
+                        if (IsUnix) {
+				Syscall.setuid (GetUid (user));
+			}
 		}
 
 		static void SetGroup (string group)
 		{
-			Syscall.setgid (GetGid (group));
+                        if (IsUnix) {
+				Syscall.setgid (GetGid (group));
+			}
 		}
 
 		public static void LogIdentity ()
 		{
-                        if (IsUnix) {
+			if (IsUnix) {
 				Logger.Write (LogLevel.Debug, "Uid {0}, euid {1}, gid {2}, egid {3}", Syscall.getuid (), Syscall.geteuid (), Syscall.getgid (), Syscall.getegid ());
-                        } else {
-				Logger.Write (LogLevel.Debug, "Uid {0}, euid {1}, gid {2}, egid {3}", -1, -1, -1, -1);
-                        }
+			}
 		}
 
 		public static void SetIdentity (uint uid, uint gid)
@@ -136,10 +146,14 @@ namespace Mono.WebServer {
 		{
 			uint uid = GetUid (user);
 			uint gid = GetGid (group);
-			uint euid = Syscall.geteuid ();
-			uint egid = Syscall.getegid ();
-			Syscall.setegid (gid);
-			Syscall.seteuid (uid);
+			uint euid = uid;
+			uint egid = gid;
+			if (IsUnix) {
+			       	euid = Syscall.geteuid ();
+			       	egid = Syscall.getegid ();
+				Syscall.setegid (gid);
+				Syscall.seteuid (uid);
+			}
 			return new IdentityToken (euid, egid);
 		}
 	}

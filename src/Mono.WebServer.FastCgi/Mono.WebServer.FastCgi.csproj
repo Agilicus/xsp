@@ -27,7 +27,7 @@
         <Variable name="MONO_PATH" value="." />
       </EnvironmentVariables>
     </EnvironmentVariables>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-3.5|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -63,11 +63,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Mono.Posix" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="Mono.Posix">
+	    <HintPath>..\packages\Mono.Posix.NETStandard.1.0.0\ref\netstandard2.0\Mono.Posix.NETStandard.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -92,8 +95,6 @@
     <Compile Include="BufferManager.cs" />
     <Compile Include="RecordType.cs" />
     <Compile Include="Compatibility\CompatArraySegment.cs" />
-    <Compile Include="Compatibility\IReadOnlyCollection.cs" />
-    <Compile Include="Compatibility\IReadOnlyList.cs" />
     <Compile Include="Buffers.cs" />
     <Compile Include="Server\GenericServer.cs" />
     <Compile Include="Server\ServerProxy.cs" />
@@ -128,5 +129,8 @@
   <ItemGroup>
     <Folder Include="Obsolete\" />
     <Folder Include="Sockets\" />
+  </ItemGroup>
+  <ItemGroup>
+   <Content Include="packages.config"/>
   </ItemGroup>
 </Project>
