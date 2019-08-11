@@ -115,11 +115,13 @@ namespace Mono.WebServer.FastCgi {
 			SendAll (socket, padding, padding_size);
 		}
 
+#if False
 		[Obsolete]
 		public static explicit operator Record (Mono.FastCgi.Record source)
 		{
 			return new Record (source.Version, source.Type, source.RequestID, source.BodyLength, source.GetBuffers ());
 		}
+#endif
 
 		public IReadOnlyList<byte> GetBody ()
 		{
