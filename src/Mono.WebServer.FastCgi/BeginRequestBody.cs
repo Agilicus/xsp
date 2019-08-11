@@ -79,6 +79,7 @@ namespace Mono.FastCgi {
 			flags = (BeginRequestFlags) body [2];
 		}
 
+#if False
 		[Obsolete]
 		public BeginRequestBody (Record record)
 		{
@@ -96,6 +97,7 @@ namespace Mono.FastCgi {
 			role = NRecord.ReadRole (body);
 			flags = (BeginRequestFlags) body [2];
 		}
+#endif
 		
 		#endregion
 		
