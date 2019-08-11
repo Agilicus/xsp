@@ -134,11 +134,13 @@ namespace Mono.FastCgi {
 			return new ConnectionProxy (new Connection (socket, this));
 		}
 		
+#if False
 		[Obsolete]
 		public void Start (bool background)
 		{
 			Start (background, 500);
 		}
+#endif
 
 		public void Start (bool background, int backlog)
 		{
@@ -201,6 +203,7 @@ namespace Mono.FastCgi {
 			return pairs;
 		}
 
+#if False
 		[Obsolete("Use BigBufferManager or SmallBufferManager instead.")]
 		public void AllocateBuffers (out byte [] buffer1,
 		                             out byte [] buffer2)
@@ -213,6 +216,7 @@ namespace Mono.FastCgi {
 		public void ReleaseBuffers (byte [] buffer1, byte [] buffer2)
 		{
 		}
+#endif
 		
 		#endregion
 		
