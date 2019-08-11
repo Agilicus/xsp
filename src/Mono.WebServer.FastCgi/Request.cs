@@ -346,11 +346,13 @@ namespace Mono.FastCgi {
 		
 		bool input_data_completed;
 
+#if False
 		[Obsolete]
 		public void AddInputData (Record record)
 		{
 			AddInputData ((NRecord)record);
 		}
+#endif
 
 		internal void AddInputData (NRecord record)
 		{
@@ -384,11 +386,13 @@ namespace Mono.FastCgi {
 		
 		bool file_data_completed;
 
+#if False
 		[Obsolete]
 		public void AddFileData (Record record)
 		{
 			AddFileData ((NRecord)record);
 		}
+#endif
 
 		internal void AddFileData (NRecord record)
 		{
@@ -530,11 +534,13 @@ namespace Mono.FastCgi {
 	{
 		readonly NRecord record;
 
+#if False
 		[Obsolete]
 		public DataReceivedArgs (Record record)
 		{
 			this.record = (NRecord)record;
 		}
+#endif
 
 		internal DataReceivedArgs(NRecord record)
 		{
@@ -545,11 +551,13 @@ namespace Mono.FastCgi {
 			get {return record.BodyLength == 0;}
 		}
 
+#if False
 		[Obsolete("Use GetBody()")]
 		public byte[] GetData ()
 		{
 			return record.GetBody ().ToArray ();
 		}
+#endif
 
 		public IReadOnlyList<byte> GetBody()
 		{
