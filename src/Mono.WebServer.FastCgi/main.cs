@@ -56,6 +56,17 @@ namespace Mono.WebServer.FastCgi {
 			return appserver.GetApplicationForPath (vhost,	port, path, false);
 		}
 
+                private static void _preload()
+                {
+                    var yourAppPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    GC.KeepAlive(typeof(Mono.FastCgi.RecordType));
+                    GC.KeepAlive(typeof(Mono.WebServer.HttpErrors));
+                    GC.KeepAlive(typeof(Mono.Unix.Catalog));
+                    Assembly.LoadFrom(System.IO.Path.Combine(yourAppPath, "fastcgi-mono-server4.exe"));
+                    Assembly.LoadFrom(System.IO.Path.Combine(yourAppPath, "Mono.WebServer.dll"));
+                    Assembly.LoadFrom(System.IO.Path.Combine(yourAppPath, "Mono.Posix.NETStandard.dll"));
+                }
+
 		public static int Main (string[] args)
 		{
 			if (Platform.IsUnix) {
@@ -63,6 +74,8 @@ namespace Mono.WebServer.FastCgi {
 				uint gid = Syscall.getegid ();
 				Platform.SetIdentity (uid, gid);
 			}
+
+                        _preload();
 
 			var configurationManager = new ConfigurationManager ("fastcgi-mono-server");
 			if (!configurationManager.LoadCommandLineArgs (args))
