@@ -10,6 +10,7 @@
     <RootNamespace>Mono.WebServer.FastCgi</RootNamespace>
     <AssemblyName>fastcgi-mono-server4</AssemblyName>
     <SignAssembly>true</SignAssembly>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyOriginatorKeyFile>..\mono.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
