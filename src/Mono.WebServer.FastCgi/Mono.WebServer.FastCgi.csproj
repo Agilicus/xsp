@@ -29,6 +29,7 @@
       </EnvironmentVariables>
     </EnvironmentVariables>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -69,7 +70,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Posix">
-	    <HintPath>..\packages\Mono.Posix.NETStandard.1.0.0\ref\netstandard2.0\Mono.Posix.NETStandard.dll</HintPath>
+      <HintPath>..\packages\Mono.Posix.NETStandard.1.0.0\ref\netstandard2.0\Mono.Posix.NETStandard.dll</HintPath>
     </Reference>
     <Reference Include="netstandard" />
   </ItemGroup>
@@ -127,11 +128,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Obsolete\" />
-    <Folder Include="Sockets\" />
-  </ItemGroup>
-  <ItemGroup>
-   <Content Include="packages.config"/>
+    <Content Include="packages.config" />
   </ItemGroup>
 </Project>
