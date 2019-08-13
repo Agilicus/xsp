@@ -38,6 +38,13 @@ namespace Mono.WebServer.FastCgi
 {
 	public class WorkerRequest : MonoWorkerRequest
 	{
+		public enum chunkState : byte
+		{
+		    initial = 0,
+		    crlf = 1,
+		    body = 2
+		}
+
 		static string [] indexFiles = { "index.aspx",
 							"default.aspx",
 							"index.html",
@@ -58,10 +65,15 @@ namespace Mono.WebServer.FastCgi
 		string [][] unknownHeaders;
 		string [] knownHeaders;
 		readonly string path_info;
+		bool chunked;
+		chunkState chunk_state;
 
 		public WorkerRequest (Responder responder, ApplicationHost appHost) : base (appHost)
 		{
 			this.responder = responder;
+			chunked = false;
+			chunk_state = chunkState.initial;
+
 			input_data = responder.InputData;
 			try {
 				Paths.GetPathsFromUri (appHost, GetHttpVerbName (), GetFilePath (), out file_path, out path_info);
@@ -106,7 +118,24 @@ namespace Mono.WebServer.FastCgi
 		public override void SendResponseFromMemory (byte [] data, int length)
 		{
 			EnsureHeadersSent ();
-			responder.SendOutput (data, length);
+			if (chunked)
+			{
+				if (chunk_state == chunkState.initial)
+				{
+					chunk_state = chunkState.body;
+					return;
+				}
+				if (chunk_state == chunkState.crlf)
+				{
+					chunk_state = chunkState.initial;
+					return;
+				}
+				if (chunk_state == chunkState.body)
+				{
+					chunk_state = chunkState.crlf;
+				}
+			}
+			responder.SendOutput(data, length);
 		}
 
 		public override void SendStatus (int statusCode, string statusDescription)
@@ -117,6 +146,10 @@ namespace Mono.WebServer.FastCgi
 
 		public override void SendUnknownResponseHeader (string name, string value)
 		{
+			if (name == "Transfer-Encoding" && value == "chunked")
+			{
+				chunked = true;
+			}
 			AppendHeaderLine ("{0}: {1}", name, value);
 		}
 		
@@ -361,6 +394,9 @@ namespace Mono.WebServer.FastCgi
 			string value;
 			switch (index)
 			{
+			case HeaderTransferEncoding:
+				value = responder.GetParameter("TRANSFER_ENCODING");
+				break;
 			case HeaderContentType:
 				value = responder.GetParameter ("CONTENT_TYPE");
 				break;
