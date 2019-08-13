@@ -56,7 +56,9 @@ namespace Mono.WebServer.FastCgi {
 			return appserver.GetApplicationForPath (vhost,	port, path, false);
 		}
 
-                private static void _preload()
+#if False
+        // Breaks ngen https://docs.microsoft.com/en-us/dotnet/framework/tools/ngen-exe-native-image-generator
+        private static void _preload()
                 {
                     var yourAppPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                     GC.KeepAlive(typeof(Mono.FastCgi.RecordType));
@@ -66,8 +68,9 @@ namespace Mono.WebServer.FastCgi {
                     Assembly.LoadFrom(System.IO.Path.Combine(yourAppPath, "Mono.WebServer.dll"));
                     Assembly.LoadFrom(System.IO.Path.Combine(yourAppPath, "Mono.Posix.NETStandard.dll"));
                 }
+#endif
 
-		public static int Main (string[] args)
+        public static int Main (string[] args)
 		{
 			if (Platform.IsUnix) {
 				uint uid = Syscall.geteuid ();
@@ -75,7 +78,7 @@ namespace Mono.WebServer.FastCgi {
 				Platform.SetIdentity (uid, gid);
 			}
 
-                        _preload();
+            // _preload();
 
 			var configurationManager = new ConfigurationManager ("fastcgi-mono-server");
 			if (!configurationManager.LoadCommandLineArgs (args))
