@@ -114,6 +114,7 @@ namespace Mono.WebServer.FastCgi.Sockets {
 		
 		public override void Listen (int backlog)
 		{
+			socket.SetSocketOption(System.Net.Sockets.SocketOptionLevel.Socket, System.Net.Sockets.SocketOptionName.ReuseAddress, 1);
 			socket.Bind (localEndPoint);
 			socket.Listen (backlog);
 		}
